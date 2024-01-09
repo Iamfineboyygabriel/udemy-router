@@ -1,8 +1,8 @@
-# React + Vite
+please take note on how to create a fake API server
+1) install "npm i json-server"
+2) and then navigate to your package.json under the "script array"
+add "server":'json-server --watch data/cities.json --port 8000 -delay 500'
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+here the "--delay 500" is not really important , it is just to make it look as if we r fetching it from a real api
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+then to run , we use "npm run server"
