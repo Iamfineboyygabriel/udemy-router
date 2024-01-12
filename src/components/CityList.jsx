@@ -16,15 +16,20 @@
 
 // export default CityList;
 
-import PropTypes from "prop-types";
 import styles from "./CityList.module.css";
 import Cityitem from "./Cityitem";
 import Spinner from "./Spinner";
 import Message from "./Message";
+import { useCities } from "../context/CitiesContext";
 
-function CityList({ cities, isLoading }) {
+function CityList() {
+  const { cities, isLoading } = useCities();
+  
+  console.log("Cities:", cities);
+
   if (isLoading) return <Spinner />;
   if (!cities.length)
+  
     return (
       <Message message="Add your first city by clicking on a city on the map" />
     );
@@ -37,11 +42,5 @@ function CityList({ cities, isLoading }) {
     </ul>
   );
 }
-//all of these are not neccessary buh i ust had to put it because react was complaining about the prop types
-CityList.propTypes = {
-  cities: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  message: PropTypes.string, // Optional prop
-};
 
 export default CityList;
