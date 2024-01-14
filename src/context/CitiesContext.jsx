@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-//we are fetching the data here because we need it in different components
 const BASE_URL = "http://localhost:9000";
 
 const CitiesContext = createContext();
@@ -11,14 +10,18 @@ function CitiesProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCity, setCurrentCity] = useState({});
 
-  useEffect(function () {
+  useEffect(() => {
     async function fetchCities() {
       try {
         setIsLoading(true);
         const res = await fetch(`${BASE_URL}/cities`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
         const data = await res.json();
         setCities(data);
       } catch (error) {
+        console.error("Error loading data:", error.message);
         alert("There was an error loading data...");
       } finally {
         setIsLoading(false);
@@ -28,7 +31,6 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  
   async function getCity(id) {
     try {
       setIsLoading(true);
@@ -37,7 +39,6 @@ function CitiesProvider({ children }) {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
       const data = await res.json();
-      console.log("got here", data);
       setCurrentCity(data);
     } catch (error) {
       console.error("Error loading data:", error.message);
@@ -45,8 +46,31 @@ function CitiesProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-    
   }
+
+  async function createCity(newCity) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${BASE_URL}/cities`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      const data = await res.json();
+      setCities((cities) => [...cities, data]);
+    } catch (error) {
+      console.error("Error creating city:", error.message);
+      alert("There was an error creating the city...");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <CitiesContext.Provider
       value={{
@@ -54,6 +78,7 @@ function CitiesProvider({ children }) {
         isLoading,
         currentCity,
         getCity,
+        createCity,
       }}
     >
       {children}
@@ -63,8 +88,9 @@ function CitiesProvider({ children }) {
 
 function useCities() {
   const context = useContext(CitiesContext);
-  if (context === undefined)
-    throw new Error("CitiesContext was used outside the CitiesProvider");
+  if (context === undefined) {
+    throw new Error("useCities must be used within a CitiesProvider");
+  }
   return context;
 }
 
