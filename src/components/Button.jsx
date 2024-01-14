@@ -9,9 +9,9 @@ export default function Button({ children, onClick, type }) {
   );
 }
 
-//all of these are not neccessary buh i ust had to put it because react was complaining about the prop types
 Button.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+  children: PropTypes.node.isRequired,
 };
+

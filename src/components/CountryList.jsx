@@ -6,13 +6,18 @@ import CountryItem from "./CountryItem";
 import { useCities } from "../context/CitiesContext";
 
 function CountryList() {
-  const { cities, isLoading } = useCities();
+  const { cities = [], isLoading } = useCities(); // Provide a default value for cities
 
-  if (isLoading) return <Spinner />;
-  if (!cities.length)
+  if (isLoading ?? true) {
+    // Use the nullish coalescing operator to provide a default value of `true`
+    return <Spinner />;
+  }
+
+  if (!cities.length) {
     return (
       <Message message="Add your first city by clicking on a city on the map" />
     );
+  }
 
   const countries = cities.reduce((arr, city) => {
     if (!arr.map((el) => el.country).includes(city.country))
@@ -29,10 +34,9 @@ function CountryList() {
   );
 }
 
-//all of these are not neccessary buh i ust had to put it because react was complaining about the prop types
 CountryList.propTypes = {
-  cities: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  cities: PropTypes.array, // Remove `isRequired` to allow `undefined`
+  isLoading: PropTypes.bool, // Remove `isRequired` to allow `undefined`
   message: PropTypes.string, // Optional prop
 };
 

@@ -21,11 +21,12 @@ import Cityitem from "./Cityitem";
 import Spinner from "./Spinner";
 import Message from "./Message";
 import { useCities } from "../context/CitiesContext";
+import PropTypes from "prop-types";
+
 
 function CityList() {
   const { cities, isLoading } = useCities();
   
-  console.log("Cities:", cities);
 
   if (isLoading) return <Spinner />;
   if (!cities.length)
@@ -42,5 +43,10 @@ function CityList() {
     </ul>
   );
 }
+
+Cityitem.propTypes = {
+  city: PropTypes.object.isRequired, // Change this to match your data structure
+};
+
 
 export default CityList;
